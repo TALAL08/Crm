@@ -1,0 +1,120 @@
+﻿@model IEnumerable<Crm.Models.Store>
+@{
+    ViewBag.Title = "ListOfStores";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ListOfStores</h2>
+<table id="stores" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Inventory</th>
+            <th>Address</th>
+            <th>ContactNo.</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+
+        $(document).ready(function () {
+
+            
+
+            var Table = $("#stores").DataTable({
+                ajax: {
+                    url: "/Api/Stores",
+                    dataSrc: ""
+
+                },
+
+                columns: [
+                    {
+                        data: "name",
+                        render: function (data, type, store) {
+
+                            return "<a data-id='" + store.id + "' js-check href ='/Store/Edit/" + store.id + "  ' > " + store.name + "</a> ";
+
+
+
+                        }
+
+                    },
+
+                    {
+                        data: "inventory.name"
+                    },
+
+
+                        {
+                        data: "address"
+                    },
+
+                    {
+                        data: "contactNo"
+                    },
+
+                    
+
+
+                    {
+                        data: "id",
+                        render: function (data) {
+
+                            return "<button class=' btn-link js-delete' data-store-id=' " + data + " ' > Delete </Button> ";
+                        }
+                    }
+
+
+                ]
+            });
+
+            $("#stores").on("click", ".js-delete", function () {
+                var button = $(this);
+
+                if (confirm("Delete the Store?")) {
+
+                    $.ajax({
+
+
+                        url: "/Api/Stores/" + button.attr("data-store-id"),
+
+                        method: "DELETE",
+
+                        success: function () {
+
+
+
+                            Table.row(button.parents("tr")).remove().draw();
+
+
+
+                        }
+                    });
+                }
+
+
+
+
+
+            });
+
+
+        });
+
+
+
+
+
+
+    </script>
+
+
+
+}

@@ -1,0 +1,130 @@
+﻿@model Crm.ViewModel.NewEmployeeViewModel
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/admindashboard2.cshtml";
+}
+
+<br />
+<br />
+<div class="container">
+    @using (Html.BeginForm("Save", "Employee"))
+    {
+        
+
+        <div class="card mx-auto mian" style="width:50%;">
+            <div class="card-header">Employee</div>
+            <div class="card-body">
+                <div class="card-title">
+                    <h3 class="text-center title-2">ADD </h3>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label for="cc-payment" class="control-label mb-1">Name</label><br />
+                    @Html.TextBoxFor(e => e.Employee.Name, new { @class = "form-control" })
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group has-success">
+                            <label for="cc-number" class="control-label mb-1">Contact</label>
+                            @Html.TextBoxFor(e => e.Employee.ContactNo, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group has-success">
+                            <label for="cc-number" class="control-label mb-1">Address</label>
+                            @Html.TextBoxFor(e => e.Employee.Address, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group has-success">
+                            <label for="cc-number" class="control-label mb-1">Designation</label>
+                            @Html.DropDownListFor(e => e.Employee.DesignationId, new SelectList(Model.Designations, "Id", "Name"), "select", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group has-success">
+                            <label for="cc-number" class="control-label mb-1">Store ID</label>
+                            @Html.DropDownListFor(e => e.Employee.StoreId, new SelectList(Model.Stores, "Id", "Name"), "select", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cc-payment" class="control-label mb-1">Guardian Name</label><br />
+                    @Html.TextBoxFor(e => e.Employee.EducationalPersonalDetails.GuardianName, new { @class = "form-control" })
+
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="cc-exp" class="control-label mb-1">Guardian Realation</label>
+                            @Html.TextBoxFor(e => e.Employee.EducationalPersonalDetails.GuardianRealation, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label for="x_card_code" class="control-label mb-1">Guardian Contact</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(e => e.Employee.EducationalPersonalDetails.GuardianContactNo, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="cc-exp" class="control-label mb-1">CNIC</label>
+                            @Html.TextBoxFor(e => e.Employee.EducationalPersonalDetails.IdCardNo, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label for="x_card_code" class="control-label mb-1">Qalification</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(e => e.Employee.EducationalPersonalDetails.Qalificaiton, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="cc-exp" class="control-label mb-1">Work Feild</label>
+                            @Html.TextBoxFor(e => e.Employee.EducationalPersonalDetails.WorkFeild, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label for="x_card_code" class="control-label mb-1">Work Experience</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(e => e.Employee.EducationalPersonalDetails.WorkExperience, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="cc-exp" class="control-label mb-1">Bank Name</label>
+                            @Html.TextBoxFor(e => e.Employee.AccountDetails.BankName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label for="x_card_code" class="control-label mb-1">Account No</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(e => e.Employee.AccountDetails.AccountNo, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cc-payment" class="control-label mb-1">IFSC</label><br />
+                    @Html.TextBoxFor(e => e.Employee.AccountDetails.IFSC, new { @class = "form-control" })
+                </div>
+                <div>
+                    @Html.HiddenFor(e => e.Employee.Id)
+                    <button type="submit" class="btn btn-lg btn-info btn-block">
+                        <i class="fa fa-save"></i>&nbsp; Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewBag.Title = "ListOfProducts";
+    Layout = "~/Views/Shared/admindashboard2.cshtml";
+}
+
+
+<br />
+<br />
+<div class="container">
+
+    <div class="card">
+        <div class="card-header">
+            Featured
+        </div>
+        <div class="card-body">
+            <table id="Products" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Quanity In Stock</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Expiry Date</th>
+                        <th>Delete</th>
+
+                    </tr>
+
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+<br />
+<br />
+@section scripts
+    {
+
+
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+
+
+            var Table = $("#Products").DataTable({
+                ajax: {
+                    url: "/Api/Products",
+                    dataSrc: ""
+
+                },
+
+                columns: [
+                    {
+                        data: "name",
+                        render: function (data, type, product) {
+
+                            return "<a data-id='" + product.id + "' js-check href ='/product/Edit/" + product.id + "  ' > " + product.name + "</a> ";
+
+
+
+                        }
+
+                    },
+
+                    {
+                        data: "quantityInStock"
+                    },
+
+                    {
+                        data: "price"
+                    },
+                    {
+                        data: "category.name"
+                    },
+                    {
+                        data: "expiryDate"
+                    },
+
+
+                    {
+                        data: "id",
+                        render: function (data) {
+
+                            return "<button class=' btn-link js-delete' data-product-id=' " + data + " ' > Delete </Button> ";
+                        }
+                    }
+
+
+                ]
+            });
+
+            $("#Products").on("click", ".js-delete", function () {
+                var button = $(this);
+
+                if (confirm("Delete the Product?")) {
+
+                    $.ajax({
+
+
+                        url: "/Api/Products/" + button.attr("data-product-id"),
+
+                        method: "DELETE",
+
+                        success: function () {
+
+
+
+                            Table.row(button.parents("tr")).remove().draw();
+
+
+
+                        }
+                    });
+                }
+
+
+
+
+
+            });
+
+
+        });
+
+    </script>
+
+
+
+}

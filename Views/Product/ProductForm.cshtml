@@ -1,0 +1,68 @@
+﻿@model Crm.ViewModel.NewProductViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/admindashboard2.cshtml";
+}
+    <br />
+    <br />
+<br />
+<br />
+<div class="container">
+    @using (Html.BeginForm("Save", "Product"))
+    {
+
+        <div class="card mx-auto" style="width:50%;">
+            <div class="card-header">Employee</div>
+            <div class="card-body">
+                <div class="card-title">
+                    <h3 class="text-center title-2">ADD </h3>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label for="cc-payment" class="control-label mb-1">Name</label><br />
+                    @Html.TextBoxFor(p => p.Product.Name, new { @class = "form-control" })
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group has-success">
+                            <label for="cc-number" class="control-label mb-1">Categories</label>
+                            @Html.DropDownListFor(p => p.Product.CategoryId, new SelectList(Model.Categories, "Id", "Name"), "select", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group has-success">
+                            <label for="cc-number" class="control-label mb-1">Price</label>
+                            @Html.TextBoxFor(p => p.Product.Price, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group has-success">
+                            <label for="cc-number" class="control-label mb-1">Expiry Date</label>
+                            @Html.TextBoxFor(p => p.Product.ExpiryDate, new { @class = "form-control" })
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group has-success">
+                            <label for="cc-number" class="control-label mb-1">Quantity</label>
+                            @Html.TextBoxFor(p => p.Product.QuantityInStock, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+
+
+                @Html.HiddenFor(p => p.Product.Id)
+                <div>
+                    <button type="submit" class="btn btn-lg btn-info btn-block">
+                        <i class="fa fa-save"></i>&nbsp; Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<br /><br /><br /><br /><br />

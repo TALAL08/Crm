@@ -1,0 +1,108 @@
+﻿@model Crm.ViewModel.StoreViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Heading</h2>
+
+
+@using (Html.BeginForm("Save", "Store"))
+{
+
+
+    <div class="form-group">
+
+        @Html.LabelFor(e => e.Store.Name)
+        @Html.TextBoxFor(e => e.Store.Name, new { @class = "form-control" })
+
+    </div>
+    <div class="form-group">
+
+        @Html.LabelFor(e => e.Inventory)
+
+        @Html.DropDownListFor(e => e.Store.Inventory.Id, new SelectList(Model.Inventories, "Id", "Name"), "select", new { @class = "form-control" })
+
+
+    </div>
+
+
+    <div class="form-group">
+
+        @Html.LabelFor(e => e.Store.ContactNo)
+        @Html.TextBoxFor(e => e.Store.ContactNo, new { @class = "form-control" })
+
+    </div>
+    <div class="form-group">
+
+        @Html.LabelFor(e => e.Store.Address)
+        @Html.TextBoxFor(e => e.Store.Address, new { @class = "form-control" })
+
+
+    </div>
+
+
+    if (Model.Heading == "Edit")
+
+    {
+
+
+        <div class="form-group">
+
+
+            @Html.LabelFor(e => e.Manager)
+
+
+
+            <input type="text" value="@Model.Manager.Name" readonly class="form-control">
+
+
+
+
+        </div>
+        <div>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Change Manager</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var employee in Model.Employees)
+                    {
+                        if (employee.DesignationId != 1)
+                        {
+                            <tr>
+                                <td>
+                                    @employee.Name
+                                </td>
+                                <td>
+                                    <button class="btn btn-default"> Assign As A Manager?</button>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+    }
+
+
+
+
+
+
+
+    @Html.HiddenFor(s => s.Store.Id)
+
+
+    <button class="btn btn-primary">Save</button>
+
+
+}

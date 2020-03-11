@@ -1,0 +1,301 @@
+﻿@model Crm.ViewModel.NewOrderViewModel
+
+@{
+    ViewBag.Title = "OrderForm";
+    Layout = "~/Views/Shared/admindashboard2.cshtml";
+}
+
+<h2>OrderForm</h2>
+
+<form id="order">
+    <label id="invenotoryId" js-inventory-id="@Model.Store.InventoryId" hidden></label>
+    <div class="form-group">
+
+        @Html.LabelFor(o => o.Name)
+        @Html.TextBoxFor(o => o.Name, new { @class = "form-control ", @required = true, @id = "customerName" })
+
+    </div>
+
+    @*<div class="form-group">
+
+            @Html.LabelFor(o => o.Stores)
+
+            @Html.DropDownListFor(o => o.Store, new SelectList(Model.Stores, "Id", "Name"), "select", new { @class = "form-control js-store-id ='"+ Model.Store.Name +"'", @required = true, @id ="store" })
+
+
+        </div>*@
+
+
+
+    <label>Products</label>
+    <div class="form-group">
+
+
+
+        <div class="tt-container">
+
+            <input id="product" name="product" type="text" value="" class="form-control position" />
+
+        </div>
+
+
+
+
+    </div>
+
+    <div class="form-group row">
+
+
+
+        <div class="tt-container col-sm-2">
+
+            <input id="quantity" name="quantity" type="text" value="" class="form-control" />
+
+        </div>
+        <div>
+            <button id="button" class="btn btn-primary form-control" type="button">Add</button>
+        </div>
+    </div>
+
+
+    <div>
+
+        <div class="row">
+
+            <div class="col-md-4 col-sm-4 ">
+                <ul id="products" class="list-group"></ul>
+            </div>
+
+            <div class="col-md-4 col-sm-4 ">
+                <ul id="quantities" class="list-group "></ul>
+            </div>
+
+
+        </div>
+        <button id="submit" class="btn btn-primary">Submit</button>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody id="row">
+            </tbody>
+        </table>
+    </div>
+
+
+
+</form>
+
+@section scripts{
+
+
+
+
+    <script>
+        $(document).ready(function () {
+
+            var prodouctsData = {
+
+                productIds: [],
+                quantity: [],
+                productId: []
+
+
+            };
+
+            var vm = {
+
+                name: [],
+                inventoryIds: [],
+                productIds: [],
+                productId: [],
+                quantity: []
+
+            };
+
+
+
+
+
+            var products = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/Api/Orders/' + $("#invenotoryId").attr("js-inventory-id") + '/?query=%QUERY',
+                    wildcard: '%QUERY'
+
+                }
+
+            });
+
+
+            $('#product').typeahead({
+
+                minLength: 3,
+                highlight: true
+
+
+            }, {
+                name: 'products',
+                display: 'name',
+                source: products
+
+
+
+            }).on("typeahead:select", function (e, product) {
+
+                var quantity = 1;
+                vm.name.push($("#customerName").val());
+               
+
+                if (prodouctsData.productIds.length > 0) {
+
+                    prodouctsData.productId.push(product.id)
+
+                    $.ajax({
+                        url: '/Api/Orders',
+
+                        type: 'Post',
+                        data: productsData,
+                       
+                        success: function (data) {
+
+                            prodouctsData.productId.pop(product.id);
+                            alert(data.quantity);
+
+                            $("#"+product.id+"").val(data.quantity);
+
+                             var totalPrice =  $("#" + product.id + "").val() * product.price;
+
+                            $("#" + product.id + 1 + "").val(totalPrice);
+
+                            prodouctsData.quantity.indexOf()
+                            
+
+                        },
+                        error: function () {
+                            vm.productId.pop(product.id)
+                            $("#row").append("<tr id='table' ><td>" + product.name + "</td><td><input id='quantityOfproduct' type='number'   value=" + quantity + " /> </td><td id='" + product.id + " '>" + product.price + "</td></tr>");
+
+                             var totalPrice =  $("#" + product.id + "").val() * product.price;
+
+                    $("#" + product.id+1 + "").val(totalPrice);
+
+                    $("#table").append("<td id='" + product.id+1 + "' >" + totalPrice + "</td>")
+
+                        }
+                    });
+
+                }
+
+                
+                if (vm.productIds.length == 0) {
+
+                    $("#row").append("<tr id='table' ><td>" + product.name + "</td><td><input id='" + product.id + "' type='number'   value=" + quantity + " /> </td><td id='" + product.id + " '>" + product.price + "</td></tr>");
+
+
+                    var totalPrice =  $("#" + product.id + "").val() * product.price;
+                    $("#table").append("<td id='" + product.id + 1 + "' >" + totalPrice + "</td>")
+
+
+
+                 var a =   prodouctsData.quantity.push($("#" + product.id + "").val());
+                    prodouctsData.productIds.push(product.id);
+
+                }
+
+               
+
+                $("#product").typeahead("val", "");
+                
+
+            });
+
+
+            $("#button").on('click', function () {
+
+
+
+
+                if (vm.productIds.length !== 0) {
+                    $("#quantities").append("<li id='list' class = 'list-group-item'>" + $("#quantity").val() + "</li>");
+                    $("#quantity").text("");
+
+                }
+
+
+
+
+
+                vm.quantity.push($("#quantity").val());
+
+
+
+
+
+                vm.inventoryIds.push(9);
+
+
+
+
+            });
+
+            $("#order").submit(function (e) {
+
+
+                e.preventDefault();
+
+
+                $.ajax({
+                    url: "/Api/Orders",
+                    method: "post",
+                    data: vm
+
+
+                })
+
+                    .done(function () {
+                        alert("Order added successfully.")
+
+                        $("#inventory").val("");
+
+                        $("#product").typeahead("val", "");
+                        $("#products").empty();
+
+                        vm =
+                        {
+                            name: [],
+                            store: [],
+                            productIds: [],
+                            quantity: []
+                        };
+
+                        validator.resetForm();
+
+                    })
+
+                    .fail(function () {
+
+
+
+                        alert("Name Or Product list is not valid ");
+
+                    });
+
+
+            });
+
+
+        });
+
+    </script>
+
+
+}
+

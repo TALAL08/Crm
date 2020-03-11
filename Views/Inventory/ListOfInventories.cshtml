@@ -1,0 +1,246 @@
+﻿
+@{
+    ViewBag.Title = "ListOfInventories";
+    Layout = "~/Views/Shared/admindashboard2.cshtml";
+}
+
+
+
+<br />
+<br />
+<div class="container">
+
+    <div class="card">
+        <div class="card-header">
+            Featured
+        </div>
+        <div class="card-body">
+
+            <table id="Inventories" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+
+                        <th>Delete</th>
+
+                    </tr>
+
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+<br />
+<br />
+
+
+
+
+<h2 id="inventoryName"></h2>
+
+<table id="inventoryproducts" hidden class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Inventories</th>
+            <th>Quanity In Stock</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Expiry Date</th>
+            <th>Delete</th>
+
+        </tr>
+
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+
+@section scripts
+{
+
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+
+
+            var Table = $("#Inventories").DataTable({
+                ajax: {
+                    url: "/Api/Inventories",
+                    dataSrc: ""
+
+                },
+
+                columns: [
+                    {
+                        data: "name",
+                        render: function (data, type, Inventory) {
+
+                            return "<button id='show' class='btn btn-link js-check' data-id='" + Inventory.id + "'   > " + Inventory.name + "</button> ";
+
+
+
+                        }
+
+                    },
+
+
+
+
+                    {
+                        data: "id",
+                        render: function (data) {
+
+                            return "<button class=' btn-link js-delete' data-Inventory-id=' " + data + " ' > Delete </Button> ";
+                        }
+                    }
+
+
+                ]
+            });
+
+            $("#Inventories").on("click", ".js-delete", function () {
+                var button = $(this);
+
+                if (confirm("Delete the Inventory?")) {
+
+                    $.ajax({
+
+
+                        url: "/Api/Inventories/" + button.attr("data-Inventory-id"),
+
+                        method: "DELETE",
+
+                        success: function () {
+
+
+
+                            Table.row(button.parents("tr")).remove().draw();
+
+
+
+                        }
+                    });
+                }
+
+
+
+
+
+            });
+
+
+
+
+
+            $("#Inventories").on('click', ".js-check", function () {
+                console.log('clicked');
+
+                $("#Inventories").hide();
+                $("#table1").hide();
+                $("#inventoryproducts").show();
+
+
+                var Table = $("#inventoryproducts").DataTable({
+                    ajax: {
+                        url: "/Api/inventoryProducts/" + "data-id",
+                        dataSrc: ""
+
+                    },
+
+                    columns: [
+                        {
+                            data: "name",
+                            render: function (data, type, Inventory) {
+
+                                return "<a data-id='" + Inventory.id + "' js-check href ='/Inventory/Edit/" + Inventory.id + "  ' > " + Inventory.name + "</a> ";
+
+
+
+                            }
+
+                        },
+
+                        {
+                            data: "product.quantityInStock"
+                        },
+
+                        {
+                            data: "product.price"
+                        },
+                        {
+                            data: "product.category.name"
+                        },
+                        {
+                            data: "product.expiryDate"
+                        },
+
+
+                        {
+                            data: "id",
+                            render: function (data) {
+
+                                return "<button class=' btn-link js-delete' data-Inventory-id=' " + data + " ' > Delete </Button> ";
+                            }
+                        }
+
+
+                    ]
+                });
+
+                $("#inventoryproducts").on("click", ".js-delete", function () {
+                    var button = $(this);
+
+                    if (confirm("Delete the Inventory?")) {
+
+                        $.ajax({
+
+
+                            url: "/Api/inventoryProducts/" + button.attr("data-Inventory-id"),
+
+                            method: "DELETE",
+
+                            success: function () {
+
+
+
+                                Table.row(button.parents("tr")).remove().draw();
+
+
+
+                            }
+                        });
+                    }
+
+
+
+
+
+                });
+
+
+            });
+
+
+
+
+
+        });
+
+
+
+
+
+
+    </script>
+
+
+
+}

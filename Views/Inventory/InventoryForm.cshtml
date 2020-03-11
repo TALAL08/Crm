@@ -1,0 +1,215 @@
+﻿@model Crm.ViewModel.NewInventoryViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/admindashboard2.cshtml";
+}
+
+
+<br />
+<br />
+<div class="container">
+
+    <form id="Inventory">
+        <div class="row">
+            <div class="col-md-6">
+            <div class="card " style="">
+                <div class="card-header">Employee</div>
+                <div class="card-body">
+                    <div class="card-title">
+                        <h3 class="text-center title-2">ADD </h3>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="cc-payment" class="control-label mb-1">Inventory</label><br />
+                        <input id="inventory" required name="Inventory" type="text" value="" class="form-control" />
+                    </div>
+       
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group has-success tt-container">
+                                <label for="cc-number" class="control-label mb-1">Product</label>
+                                
+                                <input id="product" name="product" type="text" value="" class="form-control position" />
+                            
+                            </div>
+                        </div>
+     
+                        <div class="col-md-6">
+                            <div class="form-group has-success">
+                                <label for="cc-number" class="control-label mb-1">Quantity</label>
+
+                                <input id="quantity" name="quantity" type="text" value="" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <button id="button" type="button" class="btn btn-lg btn-info btn-block">
+                            <i class="fa fa-save"></i>&nbsp; Add
+                        </button>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-header">
+                        Product List
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-4 col-sm-4 ">
+                            <ul id="products" class="list-group"></ul>
+                        </div>
+
+                        <div class="col-md-4 col-sm-4 ">
+                            <ul id="quantities" class="list-group "></ul>
+                        </div>
+
+
+                    </div>
+
+                    <button id="submit" type="submit" class="btn btn-lg btn-info btn-block">
+                        <i class="fa fa-save"></i>&nbsp; Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+
+
+@section scripts{
+<script>
+
+
+    $(document).ready(function () {
+
+
+
+
+        var vm = {
+
+            name: [],
+            productIds: [],
+            quantity: []
+        };
+
+
+
+
+
+
+        var products = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/Api/Products?query=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+
+        $('#product').typeahead({
+
+            minLength: 3,
+            highlight: true
+
+        }, {
+            name: 'products',
+            display: 'name',
+            source: products
+        }).on("typeahead:select", function (e, product) {
+
+            $("#products").append("<li class = 'list-group-item'>" + product.name + "</li>");
+            $("#product").typeahead("val", "");
+
+            vm.productIds.push(product.id);
+
+
+
+        });
+
+        $("#button").on('click', function () {
+
+
+
+            if (vm.productIds.length !== 0) {
+                $("#quantities").append("<li id='list' class = 'list-group-item'>" + $("#quantity").val() + "</li>");
+                $("#quantity").text("");
+            }
+
+
+
+
+            vm.quantity.push($("#quantity").val());
+
+            vm.name.push($("#inventory").val());
+
+
+        });
+
+
+
+
+
+        var validator = $("#Inventory").validate({
+
+
+
+            submitHandler: function () {
+
+
+
+                $.ajax({
+                    url: "/Api/Inventories",
+                    method: "post",
+                    data: vm
+
+                })
+
+                    .done(function () {
+                        alert("Inventory added successfully.")
+
+                        $("#inventory").val("");
+
+                        $("#product").typeahead("val", "");
+                        $("#products").empty();
+
+                        vm =
+                        {
+                            name: [],
+                            productIds: [],
+                            quantity: []
+                        };
+
+                        validator.resetForm();
+
+                    })
+
+                    .fail(function () {
+
+
+
+                        alert("Name Or Product list is not valid ");
+
+                    });
+
+            }
+
+
+
+        });
+
+    });
+
+
+
+</script>
+
+
+    }

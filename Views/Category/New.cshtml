@@ -1,0 +1,35 @@
+﻿@model Crm.Models.Category
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/admindashboard2.cshtml";
+}
+<br />
+<br />
+<div class="container">
+    @using (Html.BeginForm("Save","Category"))
+    {
+
+        <div class="card mx-auto" style="width:50%;">
+            <div class="card-header">Categories</div>
+            <div class="card-body">
+                <div class="card-title">
+                    <h3 class="text-center title-2">ADD </h3>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label for="cc-payment" class="control-label mb-1">Categories</label><br />
+                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+                <div>
+
+                    @Html.HiddenFor(c => c.Id)
+                    <button type="submit" class="btn btn-lg btn-info btn-block">
+                        <i class="fa fa-save"></i>&nbsp; Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<br /><br /><br /><br /><br />

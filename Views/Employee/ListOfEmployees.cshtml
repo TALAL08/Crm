@@ -1,0 +1,151 @@
+﻿@model IEnumerable<Crm.Models.Employee>
+@{
+    ViewBag.Title = "ListOfEmployees";
+    Layout = "~/Views/Shared/admindashboard2.cshtml";
+}
+
+
+
+<br />
+<br />
+<div class="container">
+
+    <div class="card">
+        <div class="card-header">
+            Featured
+        </div>
+        <div class="card-body">
+
+            <table id="Employees" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>ContactNo.</th>
+                        <th>Designation</th>
+                        <th>Store Name</th>
+                        <th>Delete</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+<br />
+<br />
+
+
+@section scripts
+{
+
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+
+
+            var Table = $("#Employees").DataTable({
+                ajax: {
+                    url: "/Api/Employees",
+                    dataSrc: ""
+
+                },
+
+                columns: [
+                    {
+                        data: "name",
+                        render: function (data, type, employee) {
+
+                            return "<a data-id='" + employee.id + "' js-check href ='/Employee/Edit/" + employee.id + "  ' > " + employee.name + "</a> ";
+
+
+
+                        }
+
+                    },
+
+
+                    {
+                        data: "address"
+                    },
+
+                    {
+                        data: "contactNo"
+                    },
+
+                    {
+                        data: "designation.name"
+                    },
+                    {
+                        data: "store.name"
+                    },
+
+
+                    {
+                        data: "id",
+                        render: function (data) {
+
+                            return "<button class=' btn-link js-delete' data-employee-id=' " + data + " ' > Delete </Button> ";
+                        }
+                    }
+
+
+                ]
+            });
+
+            $("#Employees").on("click", ".js-delete", function () {
+                var button = $(this);
+
+                if (confirm("Delete the Employee?")) {
+
+                    $.ajax({
+
+
+                        url: "/Api/Employees/" + button.attr("data-employee-id"),
+
+                        method: "DELETE",
+
+                        success: function () {
+
+
+
+                            Table.row(button.parents("tr")).remove().draw();
+
+
+
+                        }
+                    });
+                }
+
+
+
+
+
+            });
+
+
+        });
+
+
+
+
+
+
+    </script>
+
+
+
+}
